@@ -1,0 +1,26 @@
+{
+	"DAY" : {
+		"Monday"    : "lundi",
+		"Tuesday"   : "mardi",
+		"Wednesday" : "mercredi",
+		"Thursday"  : "jeudi",
+		"Friday"    : "vendredi",
+		"Saturday"  : "samedi",
+		"Sunday"    : "dimanche"
+	},
+	"MONTH" : [
+		"",
+		"janvier",
+		"février",
+		"mars",
+		"avril",
+		"mai",
+		"juin",
+		"juillet",
+		"août",
+		"septembre",
+		"octobre",
+		"novembre",
+		"décembre"
+	]
+}

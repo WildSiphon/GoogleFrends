@@ -41,7 +41,6 @@ class WrapperTwitter():
             print(f"Connected to '{api.me().name}' @{api.me().screen_name}")
         return api
 
-    def postImage(self,status):
-        """Post file on Twitter"""
-        filename = f"{PATH}assets/output.png" 
+    def postImage(self,status,filename):
+        """Post media on Twitter"""
         self.__api.update_with_media(filename, status)

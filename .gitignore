@@ -1,3 +1,4 @@
 ENV
 credentials.json
 log
+assets/output.png

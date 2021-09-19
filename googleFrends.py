@@ -1,30 +1,13 @@
-#!/usr/bin/env python3
-
-import json
-import time
-import tweepy
-
 from PIL import ImageFont,ImageDraw,Image
-from datetime import datetime,date
+from datetime import *
 from pytrends.request import TrendReq
+from modules.twitter_wrapper import WrapperTwitter
+
+DAY_FR = {"Monday" : "lundi", "Tuesday" : "mardi", "Wednesday" : "mercredi", "Thursday" : "jeudi", "Friday" : "vendredi", "Saturday" : "samedi", "Sunday" : "dimanche"}
+MONTH_FR = ["","janvier","février","mars","avril","mai","juin","juillet","août","septembre","octobre","novembre","décembre"]
 
 #PATH="/home/pi/Bots/GoogleFrends/"
 PATH="./"
-
-def connect():
-    global api
-    with open(f"{PATH}credentials.json","r") as f:
-        token = json.load(f)
-
-    consumer_key = token["API_KEY"]
-    consumer_secret = token["API_SECRET_KEY"]
-    access_token = token["ACCESS_TOKEN"]
-    access_token_secret = token["ACCESS_TOKEN_SECRET"]
-    
-    auth = tweepy.OAuthHandler(consumer_key, consumer_secret)
-    auth.secure = True
-    auth.set_access_token(access_token, access_token_secret)
-    api = tweepy.API(auth)
 
 def createImage():
     pytrend = TrendReq()
@@ -42,34 +25,22 @@ def createImage():
         y += 65
     image.save(f"{PATH}assets/output.png")
 
-def postImage():
-    
-    connect()
-    
-    try:
-        Tdate = date.today()
-        day_fr = {"Monday" : "Lundi", "Tuesday" : "Mardi", "Wednesday" : "Mercredi", "Thursday" : "Jeudi", "Friday" : "Vendredi", "Saturday" : "Samedi", "Sunday" : "Dimanche"}
-        month_fr = ["","Janvier","Février","Mars","Avril","Mai","Juin","Juillet","Août","Septembre","Octobre","Novembre","Décembre"]
-
-        if Tdate.strftime("%d") == "01":
-            day = "1er"
-        else:
-            day = Tdate.strftime("%d")
-        date_today = day_fr[Tdate.strftime("%A")] + " " + day + " " + month_fr[int(Tdate.strftime("%m"))] + " " + Tdate.strftime("%Y")
-
-        status = "Top des recherches Google en France du " + date_today + " (" + Tdate.strftime("%d/%m/%Y") + ") à " + datetime.now().strftime("%H") + "h"
-        filename = f"{PATH}assets/output.png"
-         
-        api.update_with_media(filename, status)
-
-        print(str(Tdate) + " " + datetime.now().strftime("%H:%M:%S") + " : Success")
-    except Exception as e:
-        print(str(Tdate) + " " + datetime.now().strftime("%H:%M:%S") + " : Fail")
-        print(e)
+def createStatus(date):
+    day_nb = "1er" if date.strftime("%d")=="01" else date.strftime("%d")
+    date_fr_long = f"{DAY_FR[date.strftime('%A')]} {day_nb} {MONTH_FR[int(date.strftime('%m'))]} {date.strftime('%Y')}"
+    status = f"Top des recherches Google en France du {date_fr_long} {date.strftime('(%d/%m/%Y) à %Hh')}"
+    return status
 
 def main():
-    createImage()
-    #postImage()
+    date = datetime.now()
+    status = createStatus(date=date)
+    try:
+        createImage()
+        twitter = WrapperTwitter(debug=False)
+        twitter.postImage(status=status)
+        print(f"{date.strftime('%Y-%m-%d %H:%M:%S')}: Success")
+    except Exception as e:
+        print(f"{date.strftime('%Y-%m-%d %H:%M:%S')}: Fail, {e}")
 
 if __name__ == "__main__":
     main()

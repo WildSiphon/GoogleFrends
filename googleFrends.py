@@ -17,8 +17,7 @@ def createImage():
     draw  = ImageDraw.Draw(image)  
     font  = ImageFont.truetype(f"{PATH}assets/Calibri.ttf", 50)  
 
-    x = 600
-    y = 420
+    x,y = 600,420
     for r in trends.head(10):
         draw.text(
             (x,y),

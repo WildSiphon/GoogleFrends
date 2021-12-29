@@ -1,6 +1,4 @@
 ENV
 credentials.json
 log
-assets/output.png
-test.py
 *__pycache__*

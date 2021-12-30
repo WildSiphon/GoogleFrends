@@ -1,15 +1,15 @@
 from datetime import datetime
 
 from twitter.tweepy_wrapper import TweepyWrapper
-from twitter.tweet_creator import TweetCreator
+from twitter.tweet_creator import CreateMedia, CreateStatus
 
 
 def main(datetime: datetime):
     tweepy_wrapper = TweepyWrapper()
 
     # Create status and media to post on Twitter
-    status = TweetCreator.create_status(date=datetime)
-    media = TweetCreator.create_media()
+    status = CreateStatus(date=datetime)
+    media = CreateMedia()
 
     # Post status and media on Twitter
     tweepy_wrapper.post_media(
